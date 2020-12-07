@@ -1,0 +1,2 @@
+detect
+-DCATKIN_DEVEL_PREFIX=/home/jbl/projects/arm/devel -DCMAKE_INSTALL_PREFIX=/home/jbl/projects/arm/install -G Unix Makefiles

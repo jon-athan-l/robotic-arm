@@ -1,0 +1,8 @@
+prefix=/home/jbl/projects/arm/devel
+
+Name: detect
+Description: Description of detect
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
