@@ -8,6 +8,9 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/jbl/projects/arm/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/jbl/projects/arm/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/jbl/projects/arm/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/jbl/projects/arm/build'
+export PYTHONPATH="/home/jbl/projects/arm/devel/lib/python2.7/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES='/home/jbl/projects/arm/devel/share/common-lisp'
 export ROS_PACKAGE_PATH="/home/jbl/projects/arm/src:$ROS_PACKAGE_PATH"
