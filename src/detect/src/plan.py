@@ -3,8 +3,8 @@
 import rospy
 from detect.msg import EntityInformation, MovementInformation
 
-# how lenient the locked-on range is
-buffer = 50
+# how lenient the locked-on range is, otherwise causes oscillations around the point due to lag
+buffer = 150
 
 def callback(message):
     packet = ["stay", "stay"]
@@ -37,5 +37,5 @@ def listener():
     rospy.spin()
 
 rospy.init_node('plan')
-pub = rospy.Publisher('movement', MovementInformation, queue_size = 10)
+pub = rospy.Publisher('movement', MovementInformation, queue_size = 1)
 listener()

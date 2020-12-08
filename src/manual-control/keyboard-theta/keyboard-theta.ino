@@ -62,9 +62,9 @@ int slide_direction;
 
 void loop() {
   if (Serial.available() > 0) {
-    slide_theta = Serial.readStringUntil(' ').toInt();
     swivel_theta = Serial.readStringUntil(' ').toInt();
-    tilt_theta = Serial.readStringUntil('!').toInt();
+    tilt_theta = Serial.readStringUntil(' ').toInt();
+    slide_theta = Serial.readStringUntil('!').toInt();
     
     swivel_delta = swivel_theta - prev_swivel_theta;
     if (swivel_delta <= 0) {

@@ -1,7 +1,7 @@
 import serial
 import time
 
-port = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+port = serial.Serial('/dev/ttyACM2', 9600, timeout=1)
 print("-----------------------------------------------------")
 print("Communications online on " + port.name)
 print()
@@ -12,6 +12,5 @@ while True:
     instruction = input(">>>   ")
     # to have a distinct terminating character for the parsing on the firmware to recognize
     instruction = instruction + "!"
-    print(instruction)
     port.write(instruction.encode())
     time.sleep(0.001)
