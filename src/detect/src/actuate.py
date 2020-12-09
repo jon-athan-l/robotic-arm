@@ -20,11 +20,9 @@ def callback(message):
 
     if lateral != 0:
         packet = "0 " + str(lateral) + "!"
-        print(packet)
         port.write(packet.encode())
     elif vertical != 0:
         packet = "1 " + str(vertical) + "!"
-        print(packet)
         port.write(packet.encode())
     
     print("-----------------")

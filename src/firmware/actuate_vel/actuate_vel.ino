@@ -11,8 +11,8 @@ const int slide_step_pin = 6;
 const int slide_dir_pin = 7;
 
 // Velocity deltas (for end movement dampening)
-const float lateral_velocity_delta = 0.03;
-const float vertical_velocity_delta = 0.03;
+const float lateral_velocity_delta = 0.07;
+const float vertical_velocity_delta = 0.07;
 
 // Max/min velocities
 const float min_vel = 0.03;
