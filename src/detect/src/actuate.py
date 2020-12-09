@@ -8,7 +8,7 @@ from detect.msg import MovementInformation
 import serial
 import time
 
-port = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+port = serial.Serial('/dev/ttyACM1', 9600, timeout=1)
 print("-----------------------------------------------------")
 print("Communications online on " + port.name)
 
@@ -26,7 +26,7 @@ def callback(message):
         port.write(vertical.encode())
     
     print("-----------------")
-    rospy.sleep(0.05)
+    rospy.sleep(0.1)
 
 
 

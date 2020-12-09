@@ -11,8 +11,12 @@ const int slide_step_pin = 6;
 const int slide_dir_pin = 7;
 
 // Velocity deltas
-const int lateral_velocity_delta = 0.02;
-const int vertical_velocity_delta = 0.02;
+const float lateral_velocity_delta = 0.07;
+const float vertical_velocity_delta = 0.02;
+
+// Max/min velocities
+const float min_vel = 0.07;
+const float max_vel = 0.21;
 
 void move(int step_pin, int dir_pin, int step, int pulses, int dir) {
   for (int i = 0; i < pulses; i++) {
@@ -47,45 +51,58 @@ void setup() {
   Serial.print("Set up successful.");
 }
 
-float lateral_velocity = 0;
-float vertical_velocity = 0;
-String prev_movement = "stay";
+float lateral_velocity = min_vel;
+float vertical_velocity = min_vel;
+String prev_lateral_movement = "stay";
+String prev_vertical_movement = "stay";
 
 void loop() {
   if (Serial.available() > 0) {
     String movement = Serial.readStringUntil('!');
     
     if (movement == "left") {
-      prev_movement = "left";
-      lateral_velocity = min(0.1, lateral_velocity_delta);
+      prev_lateral_movement = "left";
+      lateral_velocity = min(max_vel, lateral_velocity + lateral_velocity_delta);
     }
     else if (movement == "right") {
-      prev_movement = "right";
-      lateral_velocity += lateral_velocity_delta;
+      prev_lateral_movement = "right";
+      lateral_velocity = min(max_vel, lateral_velocity + lateral_velocity_delta);
     }
     else if (movement == "up") {
-      prev_movement = "up";
-      vertical_velocity += vertical_velocity_delta;
+      prev_vertical_movement = "up";
+      vertical_velocity = min(max_vel, vertical_velocity + vertical_velocity_delta);
     }
     else if (movement == "down") {
-      prev_movement = "down";
-      vertical_velocity += vertical_velocity_delta;
+      prev_vertical_movement = "down";
+      vertical_velocity = min(max_vel, vertical_velocity + vertical_velocity_delta);
     }
 
     Serial.println("---------------");
     Serial.println(movement);
-  } else {
-    lateral_velocity = max(0.01, lateral_velocity / 2.0)
-    vertical_velocity = max(0.01, lateral_velocity / 2.0)
   }
-
-  if lateral_velocity > 0.01 {
-    float delay = 1 / lateral_velocity;
-    move(swivel_step_pin, swivel_dir_pin, 10, 5, swivel_direction);
+  else {
+    lateral_velocity = max(min_vel, lateral_velocity - (2 * lateral_velocity_delta));
+    vertical_velocity = max(min_vel, lateral_velocity - (2 * vertical_velocity_delta));
   }
-  else if vertical_velocity > 0.01 {
-    float delay = 1 / vertical_velocity;
-    move(tilt_step_pin, tilt_dir_pin, 10, 5, tilt_direction);
+  if (lateral_velocity > min_vel + 0.01) {
+    int swivel_direction;
+    float cycle_delay = 1 / lateral_velocity;
+    if (prev_lateral_movement == "left") {
+      swivel_direction = 1;
+    } else {
+      swivel_direction = 0;
+    }
+    move(swivel_step_pin, swivel_dir_pin, int(cycle_delay), 10, swivel_direction);
+  }
+  else if (vertical_velocity > min_vel + 0.01) {
+    int tilt_direction;
+    float cycle_delay = 1 / vertical_velocity;
+    if (prev_vertical_movement == "up") {
+      tilt_direction = 1;
+    } else {
+      tilt_direction = 0;
+    }
+    move(tilt_step_pin, tilt_dir_pin, int(cycle_delay), 10, tilt_direction);
   }
 
 }
