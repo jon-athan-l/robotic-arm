@@ -80,8 +80,12 @@ void loop() {
   }
 
   if lateral_velocity > 0.01 {
-    
+    float delay = 1 / lateral_velocity;
+    move(swivel_step_pin, swivel_dir_pin, 10, 5, swivel_direction);
+  }
+  else if vertical_velocity > 0.01 {
+    float delay = 1 / vertical_velocity;
+    move(tilt_step_pin, tilt_dir_pin, 10, 5, tilt_direction);
   }
 
-  move(tilt_step_pin, tilt_dir_pin, 10, 5, tilt_direction);
 }

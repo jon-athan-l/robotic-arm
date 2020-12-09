@@ -8,16 +8,14 @@ from detect.msg import MovementInformation
 import serial
 import time
 
-port = serial.Serial('/dev/ttyACM2', 9600, timeout=1)
+port = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 print("-----------------------------------------------------")
 print("Communications online on " + port.name)
-print()
 
 
 def callback(message):
 
     lateral = message.instructions[0]
-
     vertical = message.instructions[1]
 
     if lateral != "stay":
