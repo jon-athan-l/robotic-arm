@@ -33,7 +33,7 @@ struct MovementInformation_
 
 
 
-   typedef std::vector<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > , typename ContainerAllocator::template rebind<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::other >  _instructions_type;
+   typedef std::vector<int16_t, typename ContainerAllocator::template rebind<int16_t>::other >  _instructions_type;
   _instructions_type instructions;
 
 
@@ -122,12 +122,12 @@ struct MD5Sum< ::detect::MovementInformation_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "3443f8de2c3446cc5ba0afaf4348ee72";
+    return "1a0b30a1eb7df94a9b605a7470fc6ff9";
   }
 
   static const char* value(const ::detect::MovementInformation_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x3443f8de2c3446ccULL;
-  static const uint64_t static_value2 = 0x5ba0afaf4348ee72ULL;
+  static const uint64_t static_value1 = 0x1a0b30a1eb7df94aULL;
+  static const uint64_t static_value2 = 0x9b605a7470fc6ff9ULL;
 };
 
 template<class ContainerAllocator>
@@ -146,7 +146,7 @@ struct Definition< ::detect::MovementInformation_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "string[] instructions\n"
+    return "int16[] instructions\n"
 ;
   }
 
@@ -188,7 +188,7 @@ struct Printer< ::detect::MovementInformation_<ContainerAllocator> >
     for (size_t i = 0; i < v.instructions.size(); ++i)
     {
       s << indent << "  instructions[" << i << "]: ";
-      Printer<std::basic_string<char, std::char_traits<char>, typename ContainerAllocator::template rebind<char>::other > >::stream(s, indent + "  ", v.instructions[i]);
+      Printer<int16_t>::stream(s, indent + "  ", v.instructions[i]);
     }
   }
 };

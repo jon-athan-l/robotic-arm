@@ -8,12 +8,12 @@ import struct
 
 
 class MovementInformation(genpy.Message):
-  _md5sum = "3443f8de2c3446cc5ba0afaf4348ee72"
+  _md5sum = "1a0b30a1eb7df94a9b605a7470fc6ff9"
   _type = "detect/MovementInformation"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """string[] instructions"""
+  _full_text = """int16[] instructions"""
   __slots__ = ['instructions']
-  _slot_types = ['string[]']
+  _slot_types = ['int16[]']
 
   def __init__(self, *args, **kwds):
     """
@@ -51,12 +51,8 @@ class MovementInformation(genpy.Message):
     try:
       length = len(self.instructions)
       buff.write(_struct_I.pack(length))
-      for val1 in self.instructions:
-        length = len(val1)
-        if python3 or type(val1) == unicode:
-          val1 = val1.encode('utf-8')
-          length = len(val1)
-        buff.write(struct.Struct('<I%ss'%length).pack(length, val1))
+      pattern = '<%sh'%length
+      buff.write(struct.Struct(pattern).pack(*self.instructions))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -71,18 +67,11 @@ class MovementInformation(genpy.Message):
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      self.instructions = []
-      for i in range(0, length):
-        start = end
-        end += 4
-        (length,) = _struct_I.unpack(str[start:end])
-        start = end
-        end += length
-        if python3:
-          val1 = str[start:end].decode('utf-8', 'rosmsg')
-        else:
-          val1 = str[start:end]
-        self.instructions.append(val1)
+      pattern = '<%sh'%length
+      start = end
+      s = struct.Struct(pattern)
+      end += s.size
+      self.instructions = s.unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -97,12 +86,8 @@ class MovementInformation(genpy.Message):
     try:
       length = len(self.instructions)
       buff.write(_struct_I.pack(length))
-      for val1 in self.instructions:
-        length = len(val1)
-        if python3 or type(val1) == unicode:
-          val1 = val1.encode('utf-8')
-          length = len(val1)
-        buff.write(struct.Struct('<I%ss'%length).pack(length, val1))
+      pattern = '<%sh'%length
+      buff.write(self.instructions.tostring())
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -118,18 +103,11 @@ class MovementInformation(genpy.Message):
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      self.instructions = []
-      for i in range(0, length):
-        start = end
-        end += 4
-        (length,) = _struct_I.unpack(str[start:end])
-        start = end
-        end += length
-        if python3:
-          val1 = str[start:end].decode('utf-8', 'rosmsg')
-        else:
-          val1 = str[start:end]
-        self.instructions.append(val1)
+      pattern = '<%sh'%length
+      start = end
+      s = struct.Struct(pattern)
+      end += s.size
+      self.instructions = numpy.frombuffer(str[start:end], dtype=numpy.int16, count=length)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill

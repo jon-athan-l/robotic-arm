@@ -10,13 +10,17 @@ const int tilt_dir_pin = 5;
 const int slide_step_pin = 6;
 const int slide_dir_pin = 7;
 
-// Velocity deltas
-const float lateral_velocity_delta = 0.07;
-const float vertical_velocity_delta = 0.02;
+// Velocity deltas (for end movement dampening)
+const float lateral_velocity_delta = 0.03;
+const float vertical_velocity_delta = 0.03;
 
 // Max/min velocities
-const float min_vel = 0.07;
-const float max_vel = 0.21;
+const float min_vel = 0.03;
+const float max_vel = 0.30;
+
+// Frame size
+const float lateral_radius = 640;
+const float vertical_radius = 360;
 
 void move(int step_pin, int dir_pin, int step, int pulses, int dir) {
   for (int i = 0; i < pulses; i++) {
@@ -56,35 +60,47 @@ float vertical_velocity = min_vel;
 String prev_lateral_movement = "stay";
 String prev_vertical_movement = "stay";
 
+float linear_map(int axis, float movement) {
+  if (axis == 0) {
+    return ((movement / lateral_radius) * max_vel) + (((lateral_radius - movement) / lateral_radius) * min_vel);
+  } else {
+    return ((movement / vertical_radius) * max_vel) + (((vertical_radius - movement) / vertical_radius) * min_vel);
+  }
+}
 void loop() {
   if (Serial.available() > 0) {
-    String movement = Serial.readStringUntil('!');
+    int axis = Serial.readStringUntil(' ').toInt();
+    float movement = Serial.readStringUntil('!').toInt();
     
-    if (movement == "left") {
-      prev_lateral_movement = "left";
-      lateral_velocity = min(max_vel, lateral_velocity + lateral_velocity_delta);
+    if (axis == 0) {
+      if (movement < 0) {
+        prev_lateral_movement = "right";
+      } else {
+        prev_lateral_movement = "left";
+      }
+      float normalized_movement = abs(movement);
+      lateral_velocity = linear_map(axis, normalized_movement);
     }
-    else if (movement == "right") {
-      prev_lateral_movement = "right";
-      lateral_velocity = min(max_vel, lateral_velocity + lateral_velocity_delta);
+    else if (axis == 1) {
+      if (movement < 0) {
+        prev_vertical_movement = "down";
+      } else {
+        prev_vertical_movement = "up";
+      }
+      float normalized_movement = abs(movement);
+      vertical_velocity = linear_map(axis, normalized_movement);
     }
-    else if (movement == "up") {
-      prev_vertical_movement = "up";
-      vertical_velocity = min(max_vel, vertical_velocity + vertical_velocity_delta);
-    }
-    else if (movement == "down") {
-      prev_vertical_movement = "down";
-      vertical_velocity = min(max_vel, vertical_velocity + vertical_velocity_delta);
-    }
-
-    Serial.println("---------------");
-    Serial.println(movement);
+    Serial.println("increasing");
   }
   else {
-    lateral_velocity = max(min_vel, lateral_velocity - (2 * lateral_velocity_delta));
-    vertical_velocity = max(min_vel, lateral_velocity - (2 * vertical_velocity_delta));
+    // Smoothly bring the velocity down to 0
+    lateral_velocity = max(min_vel, lateral_velocity - lateral_velocity_delta);
+    vertical_velocity = max(min_vel, lateral_velocity - vertical_velocity_delta);
+    Serial.println("decreasing");
   }
+  // Adding 0.01 seems to account for incorrect float equivalencies? i.e. ~min_vel > min_vel == True.
   if (lateral_velocity > min_vel + 0.01) {
+    Serial.println(lateral_velocity);
     int swivel_direction;
     float cycle_delay = 1 / lateral_velocity;
     if (prev_lateral_movement == "left") {

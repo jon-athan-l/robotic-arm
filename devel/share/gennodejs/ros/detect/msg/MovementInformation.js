@@ -33,7 +33,7 @@ class MovementInformation {
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type MovementInformation
     // Serialize message field [instructions]
-    bufferOffset = _arraySerializer.string(obj.instructions, buffer, bufferOffset, null);
+    bufferOffset = _arraySerializer.int16(obj.instructions, buffer, bufferOffset, null);
     return bufferOffset;
   }
 
@@ -42,15 +42,13 @@ class MovementInformation {
     let len;
     let data = new MovementInformation(null);
     // Deserialize message field [instructions]
-    data.instructions = _arrayDeserializer.string(buffer, bufferOffset, null)
+    data.instructions = _arrayDeserializer.int16(buffer, bufferOffset, null)
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
-    object.instructions.forEach((val) => {
-      length += 4 + val.length;
-    });
+    length += 2 * object.instructions.length;
     return length + 4;
   }
 
@@ -61,13 +59,13 @@ class MovementInformation {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '3443f8de2c3446cc5ba0afaf4348ee72';
+    return '1a0b30a1eb7df94a9b605a7470fc6ff9';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    string[] instructions
+    int16[] instructions
     `;
   }
 

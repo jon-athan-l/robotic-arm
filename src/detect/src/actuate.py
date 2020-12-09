@@ -8,7 +8,7 @@ from detect.msg import MovementInformation
 import serial
 import time
 
-port = serial.Serial('/dev/ttyACM1', 9600, timeout=1)
+port = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 print("-----------------------------------------------------")
 print("Communications online on " + port.name)
 
@@ -18,15 +18,17 @@ def callback(message):
     lateral = message.instructions[0]
     vertical = message.instructions[1]
 
-    if lateral != "stay":
-        print(lateral)
-        port.write(lateral.encode())
-    else:
-        print(vertical)
-        port.write(vertical.encode())
+    if lateral != 0:
+        packet = "0 " + str(lateral) + "!"
+        print(packet)
+        port.write(packet.encode())
+    elif vertical != 0:
+        packet = "1 " + str(vertical) + "!"
+        print(packet)
+        port.write(packet.encode())
     
     print("-----------------")
-    rospy.sleep(0.1)
+    rospy.sleep(0.5)
 
 
 

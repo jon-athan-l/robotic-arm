@@ -7,7 +7,8 @@ from detect.msg import EntityInformation, MovementInformation
 buffer = 50
 
 def callback(message):
-    packet = ["stay", "stay"]
+    # initialize packet to some arbitrary value
+    packet = [0, 0]
     # if delta_x is negative, the arm needs to pan right
     delta_x = message.centerPoint[0] - message.generalizedEntityPoint[0]
 
@@ -15,16 +16,10 @@ def callback(message):
     delta_y = message.centerPoint[1] - message.generalizedEntityPoint[1]
 
     if abs(delta_x) > buffer:
-        if delta_x < 0:
-            packet[0] = "right"
-        else:
-            packet[0] = "left"
+        packet[0] = delta_x
     
     if abs(delta_y) > buffer:
-        if delta_y < 0:
-            packet[1] = "down"
-        else:
-            packet[1] = "up"
+        packet[1] = delta_y
     
     pub.publish(MovementInformation([packet[0], packet[1]]))
 

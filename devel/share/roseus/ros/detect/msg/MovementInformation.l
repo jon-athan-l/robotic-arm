@@ -19,7 +19,7 @@
 (defmethod detect::MovementInformation
   (:init
    (&key
-    ((:instructions __instructions) (let (r) (dotimes (i 0) (push "" r)) r))
+    ((:instructions __instructions) (make-array 0 :initial-element 0 :element-type :integer))
     )
    (send-super :init)
    (setq _instructions __instructions)
@@ -30,41 +30,41 @@
   (:serialization-length
    ()
    (+
-    ;; string[] _instructions
-    (apply #'+ (mapcar #'(lambda (x) (+ 4 (length x))) _instructions)) 4
+    ;; int16[] _instructions
+    (* 2    (length _instructions)) 4
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; string[] _instructions
+     ;; int16[] _instructions
      (write-long (length _instructions) s)
-     (dolist (elem _instructions)
-       (write-long (length elem) s) (princ elem s)
+     (dotimes (i (length _instructions))
+       (write-word (elt _instructions i) s)
        )
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; string[] _instructions
+   ;; int16[] _instructions
    (let (n)
      (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4)
-     (setq _instructions (make-list n))
+     (setq _instructions (instantiate integer-vector n))
      (dotimes (i n)
-     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setf (elt _instructions i) (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
+     (setf (elt _instructions i) (sys::peek buf ptr- :short)) (incf ptr- 2)
      ))
    ;;
    self)
   )
 
-(setf (get detect::MovementInformation :md5sum-) "3443f8de2c3446cc5ba0afaf4348ee72")
+(setf (get detect::MovementInformation :md5sum-) "1a0b30a1eb7df94a9b605a7470fc6ff9")
 (setf (get detect::MovementInformation :datatype-) "detect/MovementInformation")
 (setf (get detect::MovementInformation :definition-)
-      "string[] instructions
+      "int16[] instructions
 ")
 
 
 
-(provide :detect/MovementInformation "3443f8de2c3446cc5ba0afaf4348ee72")
+(provide :detect/MovementInformation "1a0b30a1eb7df94a9b605a7470fc6ff9")
 
 
