@@ -4,7 +4,7 @@ import rospy
 from detect.msg import EntityInformation, MovementInformation
 
 # how lenient the locked-on range is, otherwise causes oscillations around the point due to lag
-buffer = 50
+buffer = 200
 
 def callback(message):
     # initialize packet to some arbitrary value

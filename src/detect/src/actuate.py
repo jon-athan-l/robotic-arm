@@ -24,9 +24,8 @@ def callback(message):
     elif vertical != 0:
         packet = "1 " + str(vertical) + "!"
         port.write(packet.encode())
-    
-    print("-----------------")
-    rospy.sleep(0.5)
+
+    rospy.sleep(0.05)
 
 
 
