@@ -42,8 +42,6 @@ while not rospy.is_shutdown():
             if debug:
                 cv2.rectangle(image,(midpoint_x - 2, midpoint_y - 2),(midpoint_x + 2, midpoint_y + 2),(255,0,0),2)
                 cv2.rectangle(image,(x,y),(x+w,y+h),(255,0,0),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = image[y:y+h, x:x+w]
 
             # update general midpoint
             sum_midpoint_x += midpoint_x
@@ -63,9 +61,7 @@ while not rospy.is_shutdown():
             midpoint_y = y + int(h/2)
             if debug:
                 cv2.rectangle(image,(midpoint_x - 2, midpoint_y - 2),(midpoint_x + 2, midpoint_y + 2),(0,0,255),2)
-                cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = image[y:y+h, x:x+w]  
+                cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),2) 
 
             # update general midpoint
             sum_midpoint_x += midpoint_x
@@ -92,7 +88,7 @@ while not rospy.is_shutdown():
         print("Capture is not available.")
 
     # Adds a KeyboardInterrupt
-    interrupt = cv2.waitKey(30) * 0xff
+    interrupt = cv2.waitKey(30)
     if interrupt == 27:
         break
 
